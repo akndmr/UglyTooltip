@@ -8,7 +8,7 @@ Forked from [Showcase](https://github.com/tokopedia/ShowCase) library and after 
 
 
 
-<img src="UglyTooltip.gif" alt="drawing" width="320"/>
+<img src="uglytooltip2x.gif" alt="drawing" width="320"/>
 
 ## Installation
 
