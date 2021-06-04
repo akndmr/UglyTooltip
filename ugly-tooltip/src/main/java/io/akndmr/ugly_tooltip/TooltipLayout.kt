@@ -62,6 +62,7 @@ class TooltipLayout : FrameLayout {
     private var circleBackgroundDrawableRes = 0
 
     private var tooltipRadius: Int = 0
+    private var showSpotlight: Boolean = true
 
     // View
     private var viewGroup: ViewGroup? = null
@@ -83,6 +84,8 @@ class TooltipLayout : FrameLayout {
 
     // path for arrow
     private var path: Path? = null
+    private var spotlightBorderPath: Path? = null
+    private var spotlightBorderPaint: Paint? = null
     private var arrowPaint: Paint? = null
     private var textViewTitle: TextView? = null
     private var textViewDesc: TextView? = null
@@ -156,7 +159,14 @@ class TooltipLayout : FrameLayout {
     private fun initFrame() {
         setWillNotDraw(false)
         viewPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        viewPaint!!.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+        if (showSpotlight){
+            viewPaint!!.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+        }
+
+        spotlightBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        spotlightBorderPaint!!.color = Color.BLUE
+        spotlightBorderPaint!!.style = Paint.Style.FILL
+
         arrowPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         arrowPaint!!.color = backgroundContentColor
         arrowPaint!!.style = Paint.Style.FILL
@@ -273,8 +283,6 @@ class TooltipLayout : FrameLayout {
                     bigCanvas.drawBitmap(bitmapTemp, 0f, 0f, paint)
                 }
                 bitmap = bigBitmap
-                bitmapTemp?.recycle()
-                bigBitmap?.recycle()
             }
 
             //set custom target to view
@@ -419,6 +427,9 @@ class TooltipLayout : FrameLayout {
         if (builder == null) {
             return
         }
+
+        showSpotlight = builder.shouldShowSpotlight()
+
         layoutRes = if (builder.getLayoutRes() != 0) builder.getLayoutRes() else layoutRes
 
         tooltipRadius = if (builder.getTooltipRadius() != 0) {
@@ -793,8 +804,9 @@ class TooltipLayout : FrameLayout {
                 if (arrowWidth == 0) {
                     path = null
                 } else {
+                    val highLightCenterY = (highlightYend + highlightYstart) / 2
                     val highLightCenterX = (highlightXend + highlightXstart) / 2
-                    val recalcArrowWidth = getRecalculateArrowWidth(highLightCenterX.toInt(), width)
+                    val recalcArrowWidth = getRecalculateArrowWidth(highLightCenterY.toInt(), width)
                     if (recalcArrowWidth == 0) {
                         path = null
                     } else {

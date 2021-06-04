@@ -46,4 +46,16 @@
         app:layout_constraintHorizontal_bias="0.523"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DENEME"
+        android:textColor="@color/white"
+        android:textSize="@dimen/title_size"
+        app:layout_constraintBottom_toTopOf="@+id/iv6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv5" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,10 +1,14 @@
 package io.akndmr.uglytooltip.sample
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import io.akndmr.ugly_tooltip.R.*
 import io.akndmr.ugly_tooltip.TooltipBuilder
+import io.akndmr.ugly_tooltip.TooltipContentPosition
 import io.akndmr.ugly_tooltip.TooltipDialog
 import io.akndmr.ugly_tooltip.TooltipObject
 import io.akndmr.uglytooltip.R
@@ -47,6 +51,7 @@ class MainActivity : AppCompatActivity() {
             .lineWidthRes(dimen.line_width)
             .shouldShowIcons(true)
             .setTooltipRadius(dimen.tooltip_radius)
+            .showSpotlight(false)
             .build()
     }
 
@@ -69,6 +74,13 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
+        tooltips.add(
+            TooltipObject(
+                findViewById<TextView>(R.id.text1),
+                "This is a title",
+                "This is a description, but a little longer than number 3 but shorter than number 5 that you will see soon."
+            )
+        )
 
         tooltips.add(
             TooltipObject(
@@ -82,7 +94,10 @@ class MainActivity : AppCompatActivity() {
             TooltipObject(
                 findViewById<ImageView>(R.id.iv6),
                 "This is another one",
-                "This description point to number 6. <font color=\"#FFC300\"> This is yellow text </font> and this is white."
+                "This description point to number 6. <font color=\"#FFC300\"> This is yellow text </font> and this is white.",
+                tooltipContentPosition = TooltipContentPosition.UNDEFINED,
+                tintBackgroundColor = ResourcesCompat.getColor(resources, R.color.blue, null),
+                null
             )
         )
 

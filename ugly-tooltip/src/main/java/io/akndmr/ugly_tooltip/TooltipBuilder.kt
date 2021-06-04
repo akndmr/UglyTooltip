@@ -44,6 +44,7 @@ class TooltipBuilder() : Parcelable {
     private var arrowWidth = 0
     private var packageName: String? = null
     private var tooltipRadius: Int = 0
+    private var showSpotlight: Boolean = true
 
     private var skipStringRes = 0
     private var useSkipWord = false
@@ -57,6 +58,11 @@ class TooltipBuilder() : Parcelable {
 
     fun setPackageName(packageName: String?): TooltipBuilder {
         this.packageName = packageName
+        return this
+    }
+
+    fun showSpotlight(shouldShow: Boolean): TooltipBuilder {
+        this.showSpotlight = shouldShow
         return this
     }
 
@@ -182,6 +188,10 @@ class TooltipBuilder() : Parcelable {
     fun useCircleIndicator(useCircleIndicator: Boolean): TooltipBuilder {
         this.useCircleIndicator = useCircleIndicator
         return this
+    }
+
+    fun shouldShowSpotlight(): Boolean {
+        return showSpotlight
     }
 
     fun getTooltipRadius(): Int {
