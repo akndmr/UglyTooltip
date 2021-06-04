@@ -52,9 +52,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun startUglyTooltips() {
-        val showCaseList: ArrayList<TooltipObject> = ArrayList()
+        val tooltips: ArrayList<TooltipObject> = ArrayList()
 
-        showCaseList.add(
+        tooltips.add(
             TooltipObject(
                 findViewById<Button>(R.id.button),
                 null,
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
-        showCaseList.add(
+        tooltips.add(
             TooltipObject(
                 findViewById<TextView>(R.id.textView),
                 "This is example title",
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         )
 
 
-        showCaseList.add(
+        tooltips.add(
             TooltipObject(
                 findViewById<ImageView>(R.id.imageView),
                 "This is example title",
@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
-        tooltipDialog?.show(this   , supportFragmentManager, "SHOWCASE_TAG",  showCaseList);
+        tooltipDialog?.show(this   , supportFragmentManager, "SHOWCASE_TAG",  tooltips);
 
     }
 }
