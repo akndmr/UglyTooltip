@@ -19,14 +19,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initShowCaseDialog()
+        initUglyTooltip()
 
         findViewById<Button>(R.id.button).setOnClickListener {
-            startTooltips()
+            startUglyTooltips()
         }
     }
 
-    private fun initShowCaseDialog() {
+    private fun initUglyTooltip() {
         tooltipDialog = TooltipBuilder()
             .setPackageName(packageName)
             .titleTextColorRes(R.color.white)
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             .build()
     }
 
-    fun startTooltips() {
+    fun startUglyTooltips() {
         val showCaseList: ArrayList<TooltipObject> = ArrayList()
 
         showCaseList.add(
