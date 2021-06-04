@@ -1,0 +1,3 @@
+rootProject.name = "Ugly Tooltip"
+include ':app'
+include ':ugly-tooltip'
