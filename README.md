@@ -6,6 +6,10 @@ Forked from [Showcase](https://github.com/tokopedia/ShowCase) library and after 
 [![](https://jitpack.io/v/akndmr/UglyTooltip.svg)](https://jitpack.io/#akndmr/UglyTooltip)
 
 
+
+
+<img src="UglyTooltip.gif" alt="drawing" width="320"/>
+
 ## Installation
 
 Project level gradle
