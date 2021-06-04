@@ -23,7 +23,7 @@ App level gradle
 
 ```bash
 dependencies {
-	   implementation 'com.github.akndmr:UglyTooltip:v1.0'
+	   implementation 'com.github.akndmr:UglyTooltip:v1.0.1'
 	}
 ```
 
