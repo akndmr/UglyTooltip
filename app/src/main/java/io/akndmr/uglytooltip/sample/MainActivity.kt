@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
         initUglyTooltip()
 
-        findViewById<Button>(R.id.button).setOnClickListener {
+        findViewById<ImageView>(R.id.iv3).setOnClickListener {
             startUglyTooltips()
         }
     }
@@ -56,26 +56,34 @@ class MainActivity : AppCompatActivity() {
 
         tooltips.add(
             TooltipObject(
-                findViewById<Button>(R.id.button),
+                findViewById<ImageView>(R.id.iv3),
                 null,
-                "This is a button indeed."
+                "No title, just description, simple text."
             )
         )
 
         tooltips.add(
             TooltipObject(
-                findViewById<TextView>(R.id.textView),
-                "This is example title",
-                "This HTML description point to <font color=\"#FFC300\"> a TextView </font> as you can see.<br/><br/> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suo enim quisque studio maxime ducitur. Scio enim esse quosdam, qui quavis lingua philosophari possint; Animum autem reliquis rebus ita perfecit, ut corpus; Quo modo autem optimum, si bonum praeterea nullum est?"
+                findViewById<ImageView>(R.id.iv4),
+                "This is a title",
+                    "This is a description, but a little longer than number 3 but shorter than number 5 that you will see soon."
             )
         )
 
 
         tooltips.add(
             TooltipObject(
-                findViewById<ImageView>(R.id.imageView),
-                "This is example title",
-                "This description point to <font color=\"#FFC300\">. This is yellow text </font> and this is white."
+                findViewById<ImageView>(R.id.iv5),
+                "This is another title",
+                "This HTML description point to <font color=\"#FFC300\"> an ImageView </font> as you can see.<br/><br/> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suo enim quisque studio maxime ducitur. Scio enim esse quosdam, qui quavis lingua philosophari possint; Animum autem reliquis rebus ita perfecit, ut corpus; Quo modo autem optimum, si bonum praeterea nullum est?"
+            )
+        )
+
+        tooltips.add(
+            TooltipObject(
+                findViewById<ImageView>(R.id.iv6),
+                "This is another one",
+                "This description point to number 6. <font color=\"#FFC300\"> This is yellow text </font> and this is white."
             )
         )
 
