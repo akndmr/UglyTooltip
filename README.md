@@ -6,10 +6,6 @@ Forked from [Showcase](https://github.com/tokopedia/ShowCase) library and after 
 [![](https://jitpack.io/v/akndmr/UglyTooltip.svg)](https://jitpack.io/#akndmr/UglyTooltip)
 
 
-
-
-<img src="uglytooltip2x.gif" alt="drawing" width="320"/>
-
 ## Installation
 
 Project level gradle
@@ -27,13 +23,15 @@ App level gradle
 
 ```bash
 dependencies {
-	   implementation 'com.github.akndmr:UglyTooltip:v1.0.2'
+	   implementation 'com.github.akndmr:UglyTooltip:v1.0.3'
 	}
 ```
 
 ## How to
 
 Init UglyTooltip with below custom properties.
+
+You can set `shouldShowIcons` flag as false to show texts(previous and next) instead.
 
 ```kotlin
 private fun initUglyTooltip() {
@@ -47,9 +45,9 @@ private fun initUglyTooltip() {
             .spacingRes(dimen.spacing_normal)
             .backgroundContentColorRes(color.darker_gray)
             .circleIndicatorBackgroundDrawableRes(drawable.selector_circle)
-            .prevStringRes(string.previous)
-            .nextStringRes(string.next)
-            .finishStringRes(string.finish)
+            .prevString(string.previous)
+            .nextString(nextStringText = "Sonraki")
+            .finishString(finishStringText = "Bitir da!")
             .useCircleIndicator(true)
             .clickable(true)
             .useArrow(true)
@@ -58,6 +56,7 @@ private fun initUglyTooltip() {
             .lineColorRes(color.line_color)
             .lineWidthRes(dimen.line_width)
             .shouldShowIcons(true)
+            .setTooltipRadius(dimen.tooltip_radius)
             .build()
     }
 ```
