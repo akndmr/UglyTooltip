@@ -27,6 +27,10 @@ class TooltipBuilder() : Parcelable {
     private var backgroundContentColorRes = 0
     private var circleIndicatorBackgroundDrawableRes = 0
     private var prevStringRes = 0
+    private var prevStringText = ""
+    private var nextStringText = ""
+    private var finishStringText = ""
+    private var skipStringText = ""
     private var nextStringRes = 0
     private var prevDrawableRes = 0
     private var nextDrawableRes = 0
@@ -39,11 +43,17 @@ class TooltipBuilder() : Parcelable {
     private var useArrow = true
     private var arrowWidth = 0
     private var packageName: String? = null
+    private var tooltipRadius: Int = 0
 
     private var skipStringRes = 0
     private var useSkipWord = false
 
     private var childFragmentManager: FragmentManager? = null
+
+    fun setTooltipRadius(@DimenRes radius: Int): TooltipBuilder {
+        this.tooltipRadius = radius
+        return this
+    }
 
     fun setPackageName(packageName: String?): TooltipBuilder {
         this.packageName = packageName
@@ -115,21 +125,30 @@ class TooltipBuilder() : Parcelable {
         return this
     }
 
-    fun finishStringRes(@StringRes finishStringRes: Int): TooltipBuilder {
+    fun finishString(@StringRes finishStringRes: Int = 0, finishStringText: String = ""): TooltipBuilder {
         this.finishStringRes = finishStringRes
+        this.finishStringText = finishStringText
         return this
     }
 
-    fun prevStringRes(@StringRes prevStringRes: Int): TooltipBuilder {
+    fun prevString(@StringRes prevStringRes: Int = 0, prevStringText: String = ""): TooltipBuilder {
         this.prevStringRes = prevStringRes
+        this.prevStringText = prevStringText
         return this
     }
 
-    fun nextStringRes(@StringRes nextStringRes: Int): TooltipBuilder {
+    fun nextString(@StringRes nextStringRes: Int = 0, nextStringText: String = ""): TooltipBuilder {
         this.nextStringRes = nextStringRes
+        this.nextStringText = nextStringText
         return this
     }
-    
+
+    fun skipString(@StringRes skipStringRes: Int = 0, skipStringText: String = ""): TooltipBuilder {
+        this.skipStringRes = skipStringRes
+        this.skipStringText = skipStringText
+        return this
+    }
+
     fun nextDrawableRes(@DrawableRes drawableRes: Int): TooltipBuilder {
         this.nextDrawableRes = drawableRes
         return this
@@ -150,11 +169,6 @@ class TooltipBuilder() : Parcelable {
         return this
     }
 
-    fun skipStringRes(skipStringRes: Int): TooltipBuilder {
-        this.skipStringRes = skipStringRes
-        return this
-    }
-
     fun shouldShowIcons(shouldShow: Boolean): TooltipBuilder {
         this.shouldShowIcons = shouldShow
         return this
@@ -168,6 +182,10 @@ class TooltipBuilder() : Parcelable {
     fun useCircleIndicator(useCircleIndicator: Boolean): TooltipBuilder {
         this.useCircleIndicator = useCircleIndicator
         return this
+    }
+
+    fun getTooltipRadius(): Int {
+        return tooltipRadius
     }
 
     fun getPackageName(): String? {
@@ -188,6 +206,22 @@ class TooltipBuilder() : Parcelable {
 
     fun getFinishStringRes(): Int {
         return finishStringRes
+    }
+
+    fun getFinishStringText(): String {
+        return finishStringText
+    }
+
+    fun getSkipStringText(): String {
+        return skipStringText
+    }
+
+    fun getNextStringText(): String {
+        return nextStringText
+    }
+
+    fun getPrevStringText(): String {
+        return prevStringText
     }
 
     fun getNextStringRes(): Int {

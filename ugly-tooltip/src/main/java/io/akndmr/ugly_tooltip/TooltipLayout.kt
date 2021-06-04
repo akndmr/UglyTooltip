@@ -19,6 +19,7 @@ import android.widget.TextView
 import androidx.annotation.Nullable
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import io.akndmr.ugly_tooltip.R.*
 
@@ -59,6 +60,8 @@ class TooltipLayout : FrameLayout {
 
     private var backgroundContentColor = 0
     private var circleBackgroundDrawableRes = 0
+
+    private var tooltipRadius: Int = 0
 
     // View
     private var viewGroup: ViewGroup? = null
@@ -411,11 +414,18 @@ class TooltipLayout : FrameLayout {
         nextDrawableRes = drawable.ic_right_arrow
         lineWidthRes = resources.getDimension(dimen.line_width).toInt()
         lineColorRes = ContextCompat.getColor(context, color.line_color)
+        tooltipRadius = resources.getDimension(dimen.tooltip_radius).toInt()
 
         if (builder == null) {
             return
         }
         layoutRes = if (builder.getLayoutRes() != 0) builder.getLayoutRes() else layoutRes
+
+        tooltipRadius = if (builder.getTooltipRadius() != 0) {
+            resources.getDimension(builder.getTooltipRadius()).toInt()
+        } else {
+            tooltipRadius
+        }
 
         prevDrawableRes = if (builder.getPrevDrawableRes() != 0) {
             builder.getPrevDrawableRes()
@@ -438,7 +448,7 @@ class TooltipLayout : FrameLayout {
         }
 
         lineWidthRes = if (builder.getLineWidthRes() != 0) {
-            builder.getLineWidthRes()
+            resources.getDimension(builder.getLineWidthRes()).toInt()
         } else {
             lineWidthRes
         }
@@ -469,13 +479,29 @@ class TooltipLayout : FrameLayout {
         circleBackgroundDrawableRes =
             if (builder.getCircleIndicatorBackgroundDrawableRes() != 0) builder.getCircleIndicatorBackgroundDrawableRes() else circleBackgroundDrawableRes
         prevString =
-            if (builder.getPrevStringRes() != 0) getContext().getString(builder.getPrevStringRes()) else prevString
+            when {
+                builder.getPrevStringRes() != 0 -> getContext().getString(builder.getPrevStringRes())
+                builder.getPrevStringText().isNotEmpty() -> builder.getPrevStringText()
+                else -> prevString
+            }
         nextString =
-            if (builder.getNextStringRes() != 0) getContext().getString(builder.getNextStringRes()) else nextString
+            when {
+                builder.getNextStringRes() != 0 -> getContext().getString(builder.getNextStringRes())
+                builder.getNextStringText().isNotEmpty() -> builder.getNextStringText()
+                else -> nextString
+            }
         finishString =
-            if (builder.getFinishStringRes() != 0) getContext().getString(builder.getFinishStringRes()) else finishString
+            when {
+                builder.getFinishStringRes() != 0 -> getContext().getString(builder.getFinishStringRes())
+                builder.getFinishStringText().isNotEmpty() -> builder.getFinishStringText()
+                else -> finishString
+            }
         skipString =
-            if (builder.getSkipStringRes() != 0) getContext().getString(builder.getSkipStringRes()) else skipString
+            when {
+                builder.getSkipStringRes() != 0 -> getContext().getString(builder.getSkipStringRes())
+                builder.getSkipStringText().isNotEmpty() -> builder.getSkipStringText()
+                else -> skipString
+            }
         useCircleIndicator = builder.useCircleIndicator()
         hasSkipWord = builder.isUseSkipWord()
         isCancelable = builder.isClickable()
@@ -540,9 +566,11 @@ class TooltipLayout : FrameLayout {
                 if (builder.getPackageName() != null) builder.getPackageName() else context.packageName
             )
 
-            val viewGroupTutorContent: View =
-                viewGroup!!.findViewById(view_group_tutor_content) as View
-            TooltipViewHelper.setBackgroundColor(viewGroupTutorContent, backgroundContentColor)
+            val viewGroupTutorContent: CardView =
+                viewGroup!!.findViewById(view_group_tutor_content) as CardView
+            viewGroupTutorContent.setCardBackgroundColor(backgroundContentColor)
+            viewGroupTutorContent.radius = tooltipRadius.toFloat()
+            //TooltipViewHelper.setBackgroundColor(viewGroupTutorContent, backgroundContentColor)
             textViewTitle = viewGroupTutorContent.findViewById(text_title)
             textViewTitle = viewGroupTutorContent.findViewById(text_title)
             textViewTitle!!.setTextColor(titleTextColor)
@@ -565,7 +593,7 @@ class TooltipLayout : FrameLayout {
 
         if (lineView != null) {
             lineView!!.setBackgroundColor(lineColorRes)
-            lineView!!.layoutParams.height = resources.getDimension(lineWidthRes).toInt()
+            lineView!!.layoutParams.height = lineWidthRes
         }
 
         if (prevButton != null) {

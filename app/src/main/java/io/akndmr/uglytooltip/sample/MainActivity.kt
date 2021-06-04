@@ -2,9 +2,7 @@ package io.akndmr.uglytooltip.sample
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 import android.widget.ImageView
-import android.widget.TextView
 import io.akndmr.ugly_tooltip.R.*
 import io.akndmr.ugly_tooltip.TooltipBuilder
 import io.akndmr.ugly_tooltip.TooltipDialog
@@ -37,9 +35,9 @@ class MainActivity : AppCompatActivity() {
             .spacingRes(dimen.spacing_normal)
             .backgroundContentColorRes(color.darker_gray)
             .circleIndicatorBackgroundDrawableRes(drawable.selector_circle)
-            .prevStringRes(string.previous)
-            .nextStringRes(string.next)
-            .finishStringRes(string.finish)
+            .prevString(string.previous)
+            .nextString(nextStringText = "Sonraki")
+            .finishString(finishStringText = "Bitir da!")
             .useCircleIndicator(true)
             .clickable(true)
             .useArrow(true)
@@ -48,6 +46,7 @@ class MainActivity : AppCompatActivity() {
             .lineColorRes(color.line_color)
             .lineWidthRes(dimen.line_width)
             .shouldShowIcons(true)
+            .setTooltipRadius(dimen.tooltip_radius)
             .build()
     }
 
