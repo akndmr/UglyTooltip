@@ -7,13 +7,46 @@
     tools:context=".sample.MainActivity"
     android:background="@color/dark_gray">
 
+    <TextView
+        android:id="@+id/tvTest2"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:text="DENEME"
+        android:textColor="@color/white"
+        android:textSize="@dimen/title_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTest3"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:text="DENEME"
+        android:textColor="@color/white"
+        android:textSize="@dimen/title_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tvTest4"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="24dp"
+        android:text="DENEME"
+        android:textColor="@color/white"
+        android:textSize="@dimen/title_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
     <ImageView
         android:id="@+id/iv3"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:src="@drawable/ic_3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_3"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv4"
@@ -29,12 +62,10 @@
         android:id="@+id/iv5"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_marginBottom="78dp"
         android:src="@drawable/ic_5"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/iv6"
@@ -47,7 +78,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/text1"
+        android:id="@+id/tvTest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="DENEME"
@@ -56,6 +87,6 @@
         app:layout_constraintBottom_toTopOf="@+id/iv6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv5" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

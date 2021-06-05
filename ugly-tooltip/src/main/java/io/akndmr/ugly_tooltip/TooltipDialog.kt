@@ -26,7 +26,7 @@ import androidx.fragment.app.FragmentTransaction
  */
 
 
-class TooltipDialog: DialogFragment() {
+class TooltipDialog : DialogFragment() {
 
     val DELAY_SCROLLING = 350
     val LOG_TAG: String = TooltipDialog::class.java.simpleName
@@ -40,27 +40,7 @@ class TooltipDialog: DialogFragment() {
     var hasViewGroupHandled = false
     private var mFragmentManager: FragmentManager? = null
 
-    private var listener: OnShowCaseStepListener? = null
-
     private var retryCounter = 0
-
-    interface OnShowCaseStepListener {
-        /**
-         * @param previousStep
-         * @param nextStep
-         * @param showCaseObject
-         * @return true if already fully handled show case step inthis function
-         */
-        fun onShowCaseGoTo(
-            previousStep: Int,
-            nextStep: Int,
-            showCaseObject: TooltipObject?
-        ): Boolean
-    }
-
-    fun setShowCaseStepListener(listener: OnShowCaseStepListener?) {
-        this.listener = listener
-    }
 
     companion object {
         private val ARG_BUILDER = "BUILDER"
@@ -77,7 +57,6 @@ class TooltipDialog: DialogFragment() {
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getArgs(arguments)
-        retainInstance = true
     }
 
     private fun getArgs(args: Bundle?) {
@@ -85,16 +64,17 @@ class TooltipDialog: DialogFragment() {
     }
 
     override fun onCreateDialog(@Nullable savedInstanceState: Bundle?): Dialog {
-        val dialog: Dialog = object : Dialog(requireContext(), io.akndmr.ugly_tooltip.R.style.UglyTooltip) {
-            override
-            fun onBackPressed() {
-                if (builder != null) {
-                    if (builder!!.isClickable()) {
-                        previous()
+        val dialog: Dialog =
+            object : Dialog(requireContext(), io.akndmr.ugly_tooltip.R.style.UglyTooltip) {
+                override
+                fun onBackPressed() {
+                    if (builder != null) {
+                        if (builder!!.isClickable()) {
+                            previous()
+                        }
                     }
                 }
             }
-        }
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         return dialog
     }
@@ -139,7 +119,13 @@ class TooltipDialog: DialogFragment() {
             close()
         } else {
             if (tutorsList != null) {
-                this@TooltipDialog.show(activity,mFragmentManager, dialogTag, tutorsList!!, currentTutorIndex + 1)
+                this@TooltipDialog.show(
+                    activity,
+                    mFragmentManager!!,
+                    dialogTag,
+                    tutorsList!!,
+                    currentTutorIndex + 1
+                )
             }
         }
     }
@@ -149,7 +135,13 @@ class TooltipDialog: DialogFragment() {
             currentTutorIndex = 0
         } else {
             if (tutorsList != null) {
-                this@TooltipDialog.show(activity,mFragmentManager, dialogTag, tutorsList!!, currentTutorIndex - 1)
+                this@TooltipDialog.show(
+                    activity,
+                    mFragmentManager!!,
+                    dialogTag,
+                    tutorsList!!,
+                    currentTutorIndex - 1
+                )
             }
         }
     }
@@ -167,44 +159,70 @@ class TooltipDialog: DialogFragment() {
         }
     }
 
-    fun hasShown(activity: Activity?, tag: String?): Boolean {
-        return TooltipPreference.hasShown(requireContext(), tag)
+    fun hasShown(activity: Activity, tag: String): Boolean {
+        return TooltipPreference.hasShown(requireActivity(), tag)
     }
 
-    fun show(activity: Activity?, fm: FragmentManager?, @Nullable tag: String?, tutorList: ArrayList<TooltipObject>) {
-        mFragmentManager = fm
-        show(activity, fm, tag, tutorList, 0)
-    }
 
     fun show(
         activity: Activity?,
-        fm: FragmentManager?,
-        @Nullable tag: String?,
-        tutorList: ArrayList<TooltipObject>,
-        indexToShow: Int
+        fm: FragmentManager,
+        sharedPrefTag: String? = null,
+        tutorList: ArrayList<TooltipObject>
     ) {
-        var indexToShow = indexToShow
+        mFragmentManager = fm
+        show(activity, fm, sharedPrefTag, tutorList, 0)
+    }
+
+    fun showWithCallback(
+        activity: Activity?,
+        fm: FragmentManager,
+        sharedPrefTag: String? = null,
+        tutorList: ArrayList<TooltipObject>,
+        onStep: (Int) -> Unit
+    ) {
+        mFragmentManager = fm
+        show(activity, fm, sharedPrefTag, tutorList, 0, onStep)
+    }
+
+    private fun show(
+        activity: Activity?,
+        fm: FragmentManager,
+        sharedPrefTag: String? = null,
+        tutorList: ArrayList<TooltipObject>,
+        index: Int,
+        onStep: ((Int) -> Unit)? = null
+    ) {
         if (activity == null || activity.isFinishing) {
             return
         }
+
+        var indexToShow = index
+
         try {
             tutorsList = tutorList
-            this.dialogTag = tag
+            this.dialogTag = sharedPrefTag
+
             if (indexToShow < 0 || indexToShow >= tutorList.size) {
                 indexToShow = 0
             }
+
             val previousIndex = currentTutorIndex
             currentTutorIndex = indexToShow
             hasViewGroupHandled = false
-            if (listener != null) {
-                hasViewGroupHandled = listener!!.onShowCaseGoTo(
-                    previousIndex, currentTutorIndex,
-                    tutorList[currentTutorIndex]
-                )
+
+            onStep?.invoke(currentTutorIndex)
+
+            if (currentTutorIndex == tutorList.lastIndex + 1) {
+                hasViewGroupHandled = true
             }
 
+
             // has been handled by listener
-            if (hasViewGroupHandled) return
+            if (hasViewGroupHandled) {
+                return
+            }
+
             val tooltipObject: TooltipObject = tutorList[currentTutorIndex]
             val viewGroup: ViewGroup? = tooltipObject.scrollView
             if (viewGroup != null) {
@@ -222,7 +240,9 @@ class TooltipDialog: DialogFragment() {
                             )
                             scrollView.smoothScrollTo(0, relativeLocation[1])
                             scrollView.postDelayed(
-                                { showLayout(activity, fm, tooltipObject) },
+                                {
+                                    showLayout(activity, fm, tooltipObject)
+                                },
                                 DELAY_SCROLLING.toLong()
                             )
                         } else if (viewGroup is NestedScrollView) {
@@ -235,7 +255,9 @@ class TooltipDialog: DialogFragment() {
                             )
                             scrollView.smoothScrollTo(0, relativeLocation[1])
                             scrollView.postDelayed(
-                                { showLayout(activity, fm, tooltipObject) },
+                                {
+                                    showLayout(activity, fm, tooltipObject)
+                                },
                                 DELAY_SCROLLING.toLong()
                             )
                         }
@@ -251,7 +273,7 @@ class TooltipDialog: DialogFragment() {
         } catch (e: Exception) {
             // to Handle the unknown exception.
             // Since this only for first guide, if any error appears, just don't show the guide
-                Log.e(LOG_TAG, e.stackTraceToString())
+            Log.e(LOG_TAG, e.stackTraceToString())
             try {
                 this@TooltipDialog.dismiss()
             } catch (e2: Exception) {

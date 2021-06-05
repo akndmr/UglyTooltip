@@ -1,10 +1,9 @@
 package io.akndmr.uglytooltip.sample
 
-import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import io.akndmr.ugly_tooltip.R.*
 import io.akndmr.ugly_tooltip.TooltipBuilder
@@ -51,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             .lineWidthRes(dimen.line_width)
             .shouldShowIcons(true)
             .setTooltipRadius(dimen.tooltip_radius)
-            .showSpotlight(false)
+            .showSpotlight(true)
             .build()
     }
 
@@ -68,15 +67,33 @@ class MainActivity : AppCompatActivity() {
 
         tooltips.add(
             TooltipObject(
-                findViewById<ImageView>(R.id.iv4),
-                "This is a title",
-                    "This is a description, but a little longer than number 3 but shorter than number 5 that you will see soon."
+                findViewById<TextView>(R.id.tvTest2),
+                null,
+                "No title, just description, simple text.",
+                tooltipContentPosition = TooltipContentPosition.RIGHT
             )
         )
 
         tooltips.add(
             TooltipObject(
-                findViewById<TextView>(R.id.text1),
+                findViewById<TextView>(R.id.tvTest3),
+                "<font color=\"#FFC300\"> an ImageView </font>",
+                "This HTML description point to <font color=\"#FFC300\"> an ImageView </font> as you can see.<br/><br/> Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                tooltipContentPosition = TooltipContentPosition.LEFT
+            )
+        )
+
+        tooltips.add(
+            TooltipObject(
+                findViewById<ImageView>(R.id.iv4),
+                "This is a title",
+                "This is a description, but a little longer than number 3 but shorter than number 5 that you will see soon."
+            )
+        )
+
+        tooltips.add(
+            TooltipObject(
+                findViewById<TextView>(R.id.tvTest),
                 "This is a title",
                 "This is a description, but a little longer than number 3 but shorter than number 5 that you will see soon."
             )
@@ -101,7 +118,17 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
-        tooltipDialog?.show(this   , supportFragmentManager, "SHOWCASE_TAG",  tooltips);
+        tooltips.add(
+            TooltipObject(
+                findViewById<TextView>(R.id.tvTest4),
+                "<font color=\"#FFC300\"> an ImageView </font>",
+                "This HTML description point to <font color=\"#FFC300\"> an ImageView </font> as you can see.<br/><br/> Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                tooltipContentPosition = TooltipContentPosition.LEFT
+            )
+        )
+
+        tooltipDialog?.show(this, supportFragmentManager, "SHOWCASE_TAG", tooltips)
 
     }
+
 }

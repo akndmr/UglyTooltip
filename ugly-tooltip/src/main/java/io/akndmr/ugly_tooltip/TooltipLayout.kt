@@ -82,6 +82,9 @@ class TooltipLayout : FrameLayout {
     private var isStart = false
     private var isLast = false
 
+    private var isOnTheLeftEdgeOfTheScreen = false
+    private var isOnTheRightEdgeOfTheScreen = false
+
     // path for arrow
     private var path: Path? = null
     private var spotlightBorderPath: Path? = null
@@ -726,8 +729,22 @@ class TooltipLayout : FrameLayout {
                     val highLightCenterY = (highlightYend + highlightYstart) / 2
                     val recalcArrowWidth =
                         getRecalculateArrowWidth(highLightCenterY.toInt(), height)
+
+                    var arrowEndY: Float = (height - spacing - tooltipRadius).toFloat()
+                    var arrowStartY = arrowEndY - arrowWidth
+
                     if (recalcArrowWidth == 0) {
-                        path = null
+                        path = Path()
+                        path!!.moveTo(highlightXend + arrowMargin, arrowStartY + arrowWidth/2)
+                        path!!.lineTo(
+                            highlightXend + spacing,
+                            arrowEndY
+                        )
+                        path!!.lineTo(
+                            highlightXend + spacing,
+                            arrowStartY
+                        )
+                        path!!.close()
                     } else {
                         path = Path()
                         path?.moveTo(highlightXend + arrowMargin, highLightCenterY)
@@ -770,11 +787,26 @@ class TooltipLayout : FrameLayout {
                 if (arrowWidth == 0) {
                     path = null
                 } else {
+
                     val highLightCenterY = (highlightYend + highlightYstart) / 2
                     val recalcArrowWidth =
                         getRecalculateArrowWidth(highLightCenterY.toInt(), height)
+
+                    var arrowEndY: Float = (height - spacing - tooltipRadius).toFloat()
+                    var arrowStartY = arrowEndY - arrowWidth
+
                     if (recalcArrowWidth == 0) {
-                        path = null
+                        path = Path()
+                        path!!.moveTo(highlightXstart - arrowMargin, arrowStartY + arrowWidth/2)
+                        path!!.lineTo(
+                            highlightXstart - spacing,
+                            arrowEndY
+                        )
+                        path!!.lineTo(
+                            highlightXstart - spacing,
+                            arrowStartY
+                        )
+                        path!!.close()
                     } else {
                         path = Path()
                         path!!.moveTo(highlightXstart - arrowMargin, highLightCenterY)
@@ -804,11 +836,58 @@ class TooltipLayout : FrameLayout {
                 if (arrowWidth == 0) {
                     path = null
                 } else {
-                    val highLightCenterY = (highlightYend + highlightYstart) / 2
+                    val spotlightWidth = highlightXend - highlightXstart
                     val highLightCenterX = (highlightXend + highlightXstart) / 2
-                    val recalcArrowWidth = getRecalculateArrowWidth(highLightCenterY.toInt(), width)
+                    val recalcArrowWidth = getRecalculateArrowWidth(highLightCenterX.toInt(), width)
+
+                    val safeArrowWidth = spacing + arrowWidth / 2
+                    isOnTheLeftEdgeOfTheScreen = highLightCenterX < safeArrowWidth
+                    isOnTheRightEdgeOfTheScreen = highLightCenterX > (width - safeArrowWidth)
+
+                    var bufferX: Float = if (isOnTheLeftEdgeOfTheScreen) {
+                        if (highlightXend < spacing + tooltipRadius) {
+                            (spacing + tooltipRadius) - highlightXend
+                        } else {
+                            0f
+                        }
+                    } else if (isOnTheRightEdgeOfTheScreen){
+                        if (highlightXstart > width - (spacing + tooltipRadius)) {
+                            highlightXstart - (width - (spacing + tooltipRadius))
+                        } else {
+                            0f
+                        }
+                    } else {
+                        0f
+                    }
+
                     if (recalcArrowWidth == 0) {
-                        path = null
+                        var safeStartPoint = if (spotlightWidth > arrowWidth) {
+                            if (isOnTheLeftEdgeOfTheScreen) {
+                                // If on the left side, get X end point
+                                highlightXend + bufferX
+                            } else {
+                                // If on the right side, get X starting point
+                                highlightXstart - bufferX
+                            }
+                        } else {
+                                if (isOnTheLeftEdgeOfTheScreen) {
+                                    highlightXend + spotlightWidth/2 + arrowWidth/2
+                                } else {
+                                    highlightXstart - spotlightWidth/2 - arrowWidth/2
+                                }
+                        }
+
+                        path = Path()
+                        path!!.moveTo(safeStartPoint, highlightYend + arrowMargin)
+                        path!!.lineTo(
+                            safeStartPoint - arrowWidth / 2,
+                            highlightYend + spacing
+                        )
+                        path!!.lineTo(
+                            safeStartPoint + arrowWidth / 2,
+                            highlightYend + spacing
+                        )
+                        path!!.close()
                     } else {
                         path = Path()
                         path!!.moveTo(highLightCenterX, highlightYend + arrowMargin)
@@ -838,19 +917,59 @@ class TooltipLayout : FrameLayout {
                 if (arrowWidth == 0) {
                     path = null
                 } else {
+                    val spotlightWidth = highlightXend - highlightXstart
                     val highLightCenterX = (highlightXend + highlightXstart) / 2
                     val recalcArrowWidth = getRecalculateArrowWidth(highLightCenterX.toInt(), width)
-                    if (recalcArrowWidth == 0) {
-                        path = null
+
+                    val safeArrowWidth = spacing + arrowWidth / 2
+                    isOnTheLeftEdgeOfTheScreen = highLightCenterX < safeArrowWidth
+                    isOnTheRightEdgeOfTheScreen = highLightCenterX > (width - safeArrowWidth)
+
+                    var bufferX: Float = if (isOnTheLeftEdgeOfTheScreen) {
+                        if (highlightXend < spacing + tooltipRadius) {
+                            (spacing + tooltipRadius) - highlightXend
+                        } else {
+                            0f
+                        }
+                    } else if (isOnTheRightEdgeOfTheScreen){
+                        if (highlightXstart > width - (spacing + tooltipRadius)) {
+                            highlightXstart - (width - (spacing + tooltipRadius))
+                        } else {
+                            0f
+                        }
                     } else {
-                        /**
-                         *   Line to draws below to lines:
-                         *    ___
-                         *    \
-                         *
-                         *    When path closed, it's a filled triangle
-                         *          ▼
-                         */
+                        0f
+                    }
+
+                    if (recalcArrowWidth == 0) {
+                        var safeStartPoint = if (spotlightWidth > arrowWidth) {
+                            if (isOnTheLeftEdgeOfTheScreen) {
+                                // If on the left side, get X end point
+                                highlightXend + bufferX
+                            } else {
+                                // If on the right side, get X starting point
+                                highlightXstart - bufferX
+                            }
+                        } else {
+                            if (isOnTheLeftEdgeOfTheScreen) {
+                                highlightXend + spotlightWidth/2 + arrowWidth/2
+                            } else {
+                                highlightXstart - spotlightWidth/2 - arrowWidth/2
+                            }
+                        }
+
+                        path = Path()
+                        path!!.moveTo(safeStartPoint, highlightYstart - arrowMargin)
+                        path!!.lineTo(
+                            safeStartPoint - arrowWidth / 2,
+                            highlightYstart - spacing
+                        )
+                        path!!.lineTo(
+                            safeStartPoint + arrowWidth / 2,
+                            highlightYstart - spacing
+                        )
+                        path!!.close()
+                    } else {
                         path = Path()
                         path!!.moveTo(highLightCenterX, highlightYstart - arrowMargin)
                         path!!.lineTo(
@@ -900,6 +1019,13 @@ class TooltipLayout : FrameLayout {
             recalcArrowWidth = 0
         }
         return recalcArrowWidth
+    }
+
+    private fun findSuitableArrowPosition(highlightXstart: Float): Pair<Float, Float> {
+        val safeArrowWidth = spacing + arrowWidth / 2
+        var arrowStartPositionX = highlightXstart - safeArrowWidth
+        var arrowEndPositionX = highlightXstart + arrowWidth
+        return Pair(arrowStartPositionX, arrowEndPositionX)
     }
 
     private fun moveViewToCenter() {
