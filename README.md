@@ -1,6 +1,6 @@
 # UglyTooltip
 
-Forked from [Showcase](https://github.com/tokopedia/ShowCase) library and after kotlinization and refactoring, published as a new library.
+Based on another [Showcase](https://github.com/tokopedia/ShowCase) library. Being kotlinized, customized and refactored.
 
 
 [![](https://jitpack.io/v/akndmr/UglyTooltip.svg)](https://jitpack.io/#akndmr/UglyTooltip)
