@@ -5,6 +5,7 @@ Based on another [Showcase](https://github.com/tokopedia/ShowCase) library. Bein
 
 [![](https://jitpack.io/v/akndmr/UglyTooltip.svg)](https://jitpack.io/#akndmr/UglyTooltip)
 
+<img src="UglyTooltipSample.gif" width="350" title="UglyTooltip Sample">
 
 ## Installation
 
