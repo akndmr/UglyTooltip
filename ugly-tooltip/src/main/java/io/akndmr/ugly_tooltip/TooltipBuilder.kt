@@ -45,11 +45,21 @@ class TooltipBuilder() : Parcelable {
     private var packageName: String? = null
     private var tooltipRadius: Int = 0
     private var showSpotlight: Boolean = true
+    private var showBottomContainer: Boolean = true
 
     private var skipStringRes = 0
     private var useSkipWord = false
 
     private var childFragmentManager: FragmentManager? = null
+
+    fun showBottomContainer(show: Boolean): TooltipBuilder {
+        this.showBottomContainer = show
+        return this
+    }
+
+    fun showBottomContainer(): Boolean {
+        return this.showBottomContainer
+    }
 
     fun setTooltipRadius(@DimenRes radius: Int): TooltipBuilder {
         this.tooltipRadius = radius

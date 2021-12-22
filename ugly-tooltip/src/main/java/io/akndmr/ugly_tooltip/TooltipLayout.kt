@@ -52,6 +52,7 @@ class TooltipLayout : FrameLayout {
     private var finishString: String? = null
     private var skipString: String? = null
     private var shouldShowIcons: Boolean = false
+    private var showBottomContainer: Boolean = true
 
     private var prevDrawableRes: Int = 0
     private var nextDrawableRes: Int = 0
@@ -98,6 +99,7 @@ class TooltipLayout : FrameLayout {
     private var nextImageView: AppCompatImageView? = null
     private var lineView: View? = null
     private var viewGroupIndicator: ViewGroup? = null
+    private var bottomContainer: ViewGroup? = null
 
     constructor(context: Context) : super(context) {
         init(context, null)
@@ -528,6 +530,7 @@ class TooltipLayout : FrameLayout {
             arrowMargin = 0
             arrowWidth = 0
         }
+        showBottomContainer = builder.showBottomContainer()
     }
 
     private fun initContent(context: Context, builder: TooltipBuilder?) {
@@ -579,6 +582,11 @@ class TooltipLayout : FrameLayout {
                 "id",
                 if (builder.getPackageName() != null) builder.getPackageName() else context.packageName
             )
+            val bottom_container = resources.getIdentifier(
+                "ll_bottom_container",
+                "id",
+                if (builder.getPackageName() != null) builder.getPackageName() else context.packageName
+            )
 
             val viewGroupTutorContent: CardView =
                 viewGroup!!.findViewById(view_group_tutor_content) as CardView
@@ -601,70 +609,84 @@ class TooltipLayout : FrameLayout {
             prevImageView = viewGroupTutorContent.findViewById(ic_previous)
             nextImageView = viewGroupTutorContent.findViewById(ic_next)
             lineView = viewGroupTutorContent.findViewById(view_line)
+            bottomContainer = viewGroupTutorContent.findViewById(bottom_container)
 
             viewGroupIndicator = viewGroupTutorContent.findViewById(view_group_indicator)
         }
 
-        if (lineView != null) {
-            lineView!!.setBackgroundColor(lineColorRes)
-            lineView!!.layoutParams.height = lineWidthRes
-        }
+        if (showBottomContainer) {
+            bottomContainer?.let {
+                it.visibility = View.VISIBLE
+            }
+            if (lineView != null) {
+                lineView!!.visibility = View.VISIBLE
+                lineView!!.setBackgroundColor(lineColorRes)
+                lineView!!.layoutParams.height = lineWidthRes
+            }
 
-        if (prevButton != null) {
-            prevButton!!.text = prevString
-            prevButton!!.setTextColor(textColor)
-            prevButton!!.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
-            prevButton!!.setOnClickListener {
-                if (tooltipListener != null) {
-                    if (this@TooltipLayout.isStart && hasSkipWord) {
-                        this@TooltipLayout.tooltipListener!!.onComplete()
-                    } else {
-                        this@TooltipLayout.tooltipListener!!.onPrevious()
+            if (prevButton != null) {
+                prevButton!!.text = prevString
+                prevButton!!.setTextColor(textColor)
+                prevButton!!.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+                prevButton!!.setOnClickListener {
+                    if (tooltipListener != null) {
+                        if (this@TooltipLayout.isStart && hasSkipWord) {
+                            this@TooltipLayout.tooltipListener!!.onComplete()
+                        } else {
+                            this@TooltipLayout.tooltipListener!!.onPrevious()
+                        }
                     }
                 }
+                if (shouldShowIcons) {
+                    prevButton!!.visibility = GONE
+                }
             }
-            if (shouldShowIcons) {
-                prevButton!!.visibility = GONE
+            if (nextButton != null) {
+                nextButton!!.setTextColor(textColor)
+                nextButton!!.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+                nextButton!!.setOnClickListener { onNextClicked() }
+                if (shouldShowIcons) {
+                    nextButton!!.visibility = GONE
+                }
             }
-        }
-        if (nextButton != null) {
-            nextButton!!.setTextColor(textColor)
-            nextButton!!.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
-            nextButton!!.setOnClickListener { onNextClicked() }
-            if (shouldShowIcons) {
-                nextButton!!.visibility = GONE
-            }
-        }
 
-        if (prevImageView != null) {
-            if (shouldShowIcons) {
-                //There is icon, hide text
-                if (prevButton != null) {
-                    prevButton!!.visibility = View.GONE
-                    prevImageView!!.setImageResource(prevDrawableRes)
-                    prevImageView!!.visibility = View.VISIBLE
-                    prevImageView!!.setOnClickListener {
-                        if (tooltipListener != null) {
-                            if (this@TooltipLayout.isStart && hasSkipWord) {
-                                this@TooltipLayout.tooltipListener!!.onComplete()
-                            } else {
-                                this@TooltipLayout.tooltipListener!!.onPrevious()
+            if (prevImageView != null) {
+                if (shouldShowIcons) {
+                    //There is icon, hide text
+                    if (prevButton != null) {
+                        prevButton!!.visibility = View.GONE
+                        prevImageView!!.setImageResource(prevDrawableRes)
+                        prevImageView!!.visibility = View.VISIBLE
+                        prevImageView!!.setOnClickListener {
+                            if (tooltipListener != null) {
+                                if (this@TooltipLayout.isStart && hasSkipWord) {
+                                    this@TooltipLayout.tooltipListener!!.onComplete()
+                                } else {
+                                    this@TooltipLayout.tooltipListener!!.onPrevious()
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-        if (nextImageView != null) {
-            if (shouldShowIcons) {
-                //There is icon, hide text
-                if (nextButton != null) {
-                    nextButton!!.visibility = View.GONE
-                    nextImageView!!.setImageResource(nextDrawableRes)
-                    nextImageView!!.visibility = View.VISIBLE
-                    nextImageView!!.setOnClickListener { onNextClicked() }
+            if (nextImageView != null) {
+                if (shouldShowIcons) {
+                    //There is icon, hide text
+                    if (nextButton != null) {
+                        nextButton!!.visibility = View.GONE
+                        nextImageView!!.setImageResource(nextDrawableRes)
+                        nextImageView!!.visibility = View.VISIBLE
+                        nextImageView!!.setOnClickListener { onNextClicked() }
+                    }
                 }
+            }
+        } else {
+            bottomContainer?.let {
+                it.visibility = View.GONE
+            }
+            lineView?.let {
+                it.visibility = View.GONE
             }
         }
 

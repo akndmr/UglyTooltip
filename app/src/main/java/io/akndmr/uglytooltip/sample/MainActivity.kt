@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
             .nextString(nextStringText = "Sonraki")
             .finishString(finishStringText = "Bitir da!")
             .useCircleIndicator(true)
+            .showBottomContainer(false)
             .clickable(true)
             .useArrow(true)
             .useSkipWord(false)
