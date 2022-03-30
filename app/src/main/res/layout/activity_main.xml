@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".sample.MainActivity"
-    android:background="@color/dark_gray">
+    android:background="@color/dark_gray"
+    tools:context=".sample.MainActivity">
 
     <TextView
         android:id="@+id/tvTest2"
@@ -36,8 +36,8 @@
         android:text="DENEME"
         android:textColor="@color/white"
         android:textSize="@dimen/title_size"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
         android:id="@+id/iv3"
