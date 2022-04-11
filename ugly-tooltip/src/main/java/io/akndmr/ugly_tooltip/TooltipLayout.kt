@@ -636,10 +636,6 @@ class TooltipLayout : FrameLayout {
             textViewDesc = viewGroupTutorContent.findViewById(text_description)
             textViewDesc!!.setTextColor(textColor)
             textViewDesc!!.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
-            val line: View = viewGroupTutorContent.findViewById(view_line)
-            if (line != null) {
-                line.setBackgroundColor(textColor)
-            }
             prevButton = viewGroupTutorContent.findViewById(text_previous)
             nextButton = viewGroupTutorContent.findViewById(text_next)
             prevImageView = viewGroupTutorContent.findViewById(ic_previous)
@@ -654,10 +650,11 @@ class TooltipLayout : FrameLayout {
             bottomContainer?.let {
                 it.visibility = View.VISIBLE
             }
-            if (lineView != null) {
-                lineView!!.visibility = View.VISIBLE
-                lineView!!.setBackgroundColor(lineColorRes)
-                lineView!!.layoutParams.height = lineWidthRes
+
+            lineView?.apply {
+                setBackgroundColor(lineColorRes)
+                layoutParams.height = 0
+                visibility = if(lineWidthRes > 0) VISIBLE else GONE
             }
 
             if (prevButton != null) {
