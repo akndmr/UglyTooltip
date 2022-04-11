@@ -99,6 +99,21 @@ class TooltipBuilder() : Parcelable {
         return this
     }
 
+    fun prevTextColorRes(@ColorRes prevTextColorRes: Int): TooltipBuilder {
+        this.prevTextColorRes = prevTextColorRes
+        return this
+    }
+
+    fun nextTextColorRes(@ColorRes nextTextColorRes: Int): TooltipBuilder {
+        this.nextTextColorRes = nextTextColorRes
+        return this
+    }
+
+    fun finishTextColorRes(@ColorRes finishTextColorRes: Int): TooltipBuilder {
+        this.finishTextColorRes = finishTextColorRes
+        return this
+    }
+
     fun shadowColorRes(@ColorRes shadowColorRes: Int): TooltipBuilder {
         this.shadowColorRes = shadowColorRes
         return this
