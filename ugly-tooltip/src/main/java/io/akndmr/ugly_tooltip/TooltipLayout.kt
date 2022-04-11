@@ -36,6 +36,9 @@ class TooltipLayout : FrameLayout {
     private var layoutRes = 0
     private var textColor = 0
     private var titleTextColor = 0
+    private var prevTextColor = 0
+    private var nextTextColor = 0
+    private var finishTextColor = 0
     private var shadowColor = 0
     private var textSize = 0f
     private var textTitleSize = 0f
@@ -164,7 +167,7 @@ class TooltipLayout : FrameLayout {
     private fun initFrame() {
         setWillNotDraw(false)
         viewPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        if (showSpotlight){
+        if (showSpotlight) {
             viewPaint!!.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
         }
 
@@ -244,8 +247,10 @@ class TooltipLayout : FrameLayout {
         if (nextButton != null) {
             if (isLast) {
                 nextButton!!.text = finishString
+                nextButton!!.setTextColor(finishTextColor)
             } else if (currentTutorIndex < tutorsListSize - 1) { // has next
                 nextButton!!.text = nextString
+                nextButton!!.setTextColor(nextTextColor)
             }
         }
 
@@ -330,10 +335,10 @@ class TooltipLayout : FrameLayout {
         this.visibility = View.VISIBLE
     }
 
-    fun getBitmapFromView(view: View): Bitmap? {
-        var bitmap =
+    private fun getBitmapFromView(view: View): Bitmap? {
+        val bitmap =
             Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
-        var canvas = Canvas(bitmap)
+        val canvas = Canvas(bitmap)
         view.draw(canvas)
         return bitmap
     }
@@ -411,6 +416,9 @@ class TooltipLayout : FrameLayout {
         layoutRes = layout.tutorial_view
         textColor = Color.WHITE
         titleTextColor = Color.WHITE
+        prevTextColor = Color.WHITE
+        nextTextColor = Color.WHITE
+        finishTextColor = Color.WHITE
         textTitleSize = resources.getDimension(dimen.title_size)
         textSize = resources.getDimension(dimen.text_normal)
         shadowColor = ContextCompat.getColor(context, color.shadow)
@@ -473,54 +481,82 @@ class TooltipLayout : FrameLayout {
             context,
             builder.getTextColorRes()
         ) else textColor
+
         titleTextColor = if (builder.getTitleTextColorRes() != 0) ContextCompat.getColor(
             context,
             builder.getTitleTextColorRes()
         ) else titleTextColor
+
+        prevTextColor = if (builder.getPrevTextColorRes() != 0) ContextCompat.getColor(
+            context,
+            builder.getPrevTextColorRes()
+        ) else prevTextColor
+
+        nextTextColor = if (builder.getNextTextColorRes() != 0) ContextCompat.getColor(
+            context,
+            builder.getNextTextColorRes()
+        ) else nextTextColor
+
+        finishTextColor = if (builder.getFinishTextColorRes() != 0) ContextCompat.getColor(
+            context,
+            builder.getFinishTextColorRes()
+        ) else finishTextColor
+
         textTitleSize =
             if (builder.getTitleTextSizeRes() != 0) resources.getDimension(builder.getTitleTextSizeRes()) else textTitleSize
+
         textSize =
             if (builder.getTextSizeRes() != 0) resources.getDimension(builder.getTextSizeRes()) else textSize
+
         backgroundContentColor =
             if (builder.getBackgroundContentColorRes() != 0) ContextCompat.getColor(
                 context,
                 builder.getBackgroundContentColorRes()
             ) else backgroundContentColor
+
         shadowColor = if (builder.getShadowColorRes() != 0) ContextCompat.getColor(
             context,
             builder.getShadowColorRes()
         ) else shadowColor
+
         spacing = if (builder.getSpacingRes() != 0) resources.getDimension(builder.getSpacingRes())
             .toInt() else spacing
+
         circleBackgroundDrawableRes =
             if (builder.getCircleIndicatorBackgroundDrawableRes() != 0) builder.getCircleIndicatorBackgroundDrawableRes() else circleBackgroundDrawableRes
+
         prevString =
             when {
                 builder.getPrevStringRes() != 0 -> getContext().getString(builder.getPrevStringRes())
                 builder.getPrevStringText().isNotEmpty() -> builder.getPrevStringText()
                 else -> prevString
             }
+
         nextString =
             when {
                 builder.getNextStringRes() != 0 -> getContext().getString(builder.getNextStringRes())
                 builder.getNextStringText().isNotEmpty() -> builder.getNextStringText()
                 else -> nextString
             }
+
         finishString =
             when {
                 builder.getFinishStringRes() != 0 -> getContext().getString(builder.getFinishStringRes())
                 builder.getFinishStringText().isNotEmpty() -> builder.getFinishStringText()
                 else -> finishString
             }
+
         skipString =
             when {
                 builder.getSkipStringRes() != 0 -> getContext().getString(builder.getSkipStringRes())
                 builder.getSkipStringText().isNotEmpty() -> builder.getSkipStringText()
                 else -> skipString
             }
+
         useCircleIndicator = builder.useCircleIndicator()
         hasSkipWord = builder.isUseSkipWord()
         isCancelable = builder.isClickable()
+
         if (builder.isUseArrow()) {
             arrowMargin = spacing / 3
             arrowWidth =
@@ -600,10 +636,6 @@ class TooltipLayout : FrameLayout {
             textViewDesc = viewGroupTutorContent.findViewById(text_description)
             textViewDesc!!.setTextColor(textColor)
             textViewDesc!!.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
-            val line: View = viewGroupTutorContent.findViewById(view_line)
-            if (line != null) {
-                line.setBackgroundColor(textColor)
-            }
             prevButton = viewGroupTutorContent.findViewById(text_previous)
             nextButton = viewGroupTutorContent.findViewById(text_next)
             prevImageView = viewGroupTutorContent.findViewById(ic_previous)
@@ -618,15 +650,16 @@ class TooltipLayout : FrameLayout {
             bottomContainer?.let {
                 it.visibility = View.VISIBLE
             }
-            if (lineView != null) {
-                lineView!!.visibility = View.VISIBLE
-                lineView!!.setBackgroundColor(lineColorRes)
-                lineView!!.layoutParams.height = lineWidthRes
+
+            lineView?.apply {
+                setBackgroundColor(lineColorRes)
+                layoutParams.height = 0
+                visibility = if(lineWidthRes > 0) VISIBLE else GONE
             }
 
             if (prevButton != null) {
                 prevButton!!.text = prevString
-                prevButton!!.setTextColor(textColor)
+                prevButton!!.setTextColor(prevTextColor)
                 prevButton!!.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
                 prevButton!!.setOnClickListener {
                     if (tooltipListener != null) {
@@ -642,7 +675,7 @@ class TooltipLayout : FrameLayout {
                 }
             }
             if (nextButton != null) {
-                nextButton!!.setTextColor(textColor)
+                nextButton!!.setTextColor(nextTextColor)
                 nextButton!!.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
                 nextButton!!.setOnClickListener { onNextClicked() }
                 if (shouldShowIcons) {
@@ -757,7 +790,7 @@ class TooltipLayout : FrameLayout {
 
                     if (recalcArrowWidth == 0) {
                         path = Path()
-                        path!!.moveTo(highlightXend + arrowMargin, arrowStartY + arrowWidth/2)
+                        path!!.moveTo(highlightXend + arrowMargin, arrowStartY + arrowWidth / 2)
                         path!!.lineTo(
                             highlightXend + spacing,
                             arrowEndY
@@ -819,7 +852,7 @@ class TooltipLayout : FrameLayout {
 
                     if (recalcArrowWidth == 0) {
                         path = Path()
-                        path!!.moveTo(highlightXstart - arrowMargin, arrowStartY + arrowWidth/2)
+                        path!!.moveTo(highlightXstart - arrowMargin, arrowStartY + arrowWidth / 2)
                         path!!.lineTo(
                             highlightXstart - spacing,
                             arrowEndY
@@ -872,7 +905,7 @@ class TooltipLayout : FrameLayout {
                         } else {
                             0f
                         }
-                    } else if (isOnTheRightEdgeOfTheScreen){
+                    } else if (isOnTheRightEdgeOfTheScreen) {
                         if (highlightXstart > width - (spacing + tooltipRadius)) {
                             highlightXstart - (width - (spacing + tooltipRadius))
                         } else {
@@ -892,11 +925,11 @@ class TooltipLayout : FrameLayout {
                                 highlightXstart - bufferX
                             }
                         } else {
-                                if (isOnTheLeftEdgeOfTheScreen) {
-                                    highlightXend + spotlightWidth/2 + arrowWidth/2
-                                } else {
-                                    highlightXstart - spotlightWidth/2 - arrowWidth/2
-                                }
+                            if (isOnTheLeftEdgeOfTheScreen) {
+                                highlightXend + spotlightWidth / 2 + arrowWidth / 2
+                            } else {
+                                highlightXstart - spotlightWidth / 2 - arrowWidth / 2
+                            }
                         }
 
                         path = Path()
@@ -953,7 +986,7 @@ class TooltipLayout : FrameLayout {
                         } else {
                             0f
                         }
-                    } else if (isOnTheRightEdgeOfTheScreen){
+                    } else if (isOnTheRightEdgeOfTheScreen) {
                         if (highlightXstart > width - (spacing + tooltipRadius)) {
                             highlightXstart - (width - (spacing + tooltipRadius))
                         } else {
@@ -974,9 +1007,9 @@ class TooltipLayout : FrameLayout {
                             }
                         } else {
                             if (isOnTheLeftEdgeOfTheScreen) {
-                                highlightXend + spotlightWidth/2 + arrowWidth/2
+                                highlightXend + spotlightWidth / 2 + arrowWidth / 2
                             } else {
-                                highlightXstart - spotlightWidth/2 - arrowWidth/2
+                                highlightXstart - spotlightWidth / 2 - arrowWidth / 2
                             }
                         }
 
