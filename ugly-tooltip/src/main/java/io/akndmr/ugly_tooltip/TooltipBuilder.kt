@@ -20,6 +20,9 @@ class TooltipBuilder() : Parcelable {
     private var layoutRes = 0
     private var titleTextColorRes = 0
     private var textColorRes = 0
+    private var prevTextColorRes = 0
+    private var nextTextColorRes = 0
+    private var finishTextColorRes = 0
     private var shadowColorRes = 0
     private var titleTextSizeRes = 0
     private var textSizeRes = 0
@@ -220,6 +223,18 @@ class TooltipBuilder() : Parcelable {
         return titleTextColorRes
     }
 
+    fun getPrevTextColorRes(): Int {
+        return prevTextColorRes
+    }
+
+    fun getNextTextColorRes(): Int {
+        return nextTextColorRes
+    }
+
+    fun getFinishTextColorRes(): Int {
+        return finishTextColorRes
+    }
+
     fun getTitleTextSizeRes(): Int {
         return titleTextSizeRes
     }
@@ -345,6 +360,9 @@ class TooltipBuilder() : Parcelable {
         arrowWidth = `in`.readInt()
         skipStringRes = `in`.readInt()
         useSkipWord = `in`.readByte().toInt() != 0
+        prevTextColorRes = `in`.readInt()
+        nextTextColorRes = `in`.readInt()
+        finishTextColorRes = `in`.readInt()
     }
     
     constructor(parcel: Parcel) : this() {

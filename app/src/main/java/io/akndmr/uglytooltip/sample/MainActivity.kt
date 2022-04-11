@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
             .showBottomContainer(false)
             .clickable(true)
             .useArrow(true)
-            .useSkipWord(false)
+            .useSkipWord(true)
             .setFragmentManager(this.supportFragmentManager)
             .lineColorRes(color.line_color)
             .lineWidthRes(dimen.line_width)
