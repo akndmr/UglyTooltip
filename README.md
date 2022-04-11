@@ -24,7 +24,7 @@ App level gradle
 
 ```bash
 dependencies {
-	   implementation 'com.github.akndmr:UglyTooltip:v1.0.5-beta'
+	   implementation 'com.github.akndmr:UglyTooltip:v1.0.6-beta'
 	}
 ```
 
