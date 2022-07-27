@@ -3,7 +3,7 @@
 Based on another [Showcase](https://github.com/tokopedia/ShowCase) library. Being kotlinized, customized and refactored.
 
 
-[![](https://jitpack.io/v/akndmr/UglyTooltip.svg)](https://jitpack.io/#akndmr/UglyTooltip)
+[![](https://jitpack.io/v/akndmr/UglyTooltip.svg)](https://jitpack.io/#akndmr/UglyTooltip) [![](https://img.shields.io/badge/Android%20Arsenal-UglyTooltip-blue.svg?style=flat)](https://android-arsenal.com/details/1/8310)
 
 <img src="UglyTooltipSample.gif" width="350" title="UglyTooltip Sample">
 
