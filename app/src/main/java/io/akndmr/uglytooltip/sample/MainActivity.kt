@@ -14,7 +14,7 @@ import io.akndmr.uglytooltip.R
 
 class MainActivity : AppCompatActivity() {
 
-    var tooltipDialog: TooltipDialog? = null
+    private var tooltipDialog: TooltipDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
             .build()
     }
 
-    fun startUglyTooltips() {
+    private fun startUglyTooltips() {
         val tooltips: ArrayList<TooltipObject> = ArrayList()
 
         tooltips.add(
@@ -133,5 +133,4 @@ class MainActivity : AppCompatActivity() {
         tooltipDialog?.show(this, supportFragmentManager, "SHOWCASE_TAG", tooltips)
 
     }
-
 }
